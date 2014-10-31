@@ -1,0 +1,47 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: centos-6.5
+
+suites:
+  - name: frontend
+    run_list:
+      - recipe[orchestrate::frontend]
+    attributes:
+    driver_config:
+      require_chef_omnibus: true
+      network:
+      - ["forwarded_port", {guest: 8080, host: 8080}]
+      - ["private_network", {ip: "33.33.33.10"}]
+      customize:
+        memory: 2048
+        cpus: 2
+
+  - name: backend
+    run_list:
+    attributes:
+    driver_config:
+      require_chef_omnibus: true
+      network:
+      - ["forwarded_port", {guest: 8080, host: 8081}]
+      - ["private_network", {ip: "33.33.33.11"}]
+      customize:
+        memory: 2048
+        cpus: 2
+
+  - name: standalone
+    run_list:
+    attributes:
+    driver_config:
+      require_chef_omnibus: true
+      network:
+      - ["forwarded_port", {guest: 8080, host: 8082}]
+      - ["private_network", {ip: "33.33.33.12"}]
+      customize:
+        memory: 2048
+        cpus: 2
